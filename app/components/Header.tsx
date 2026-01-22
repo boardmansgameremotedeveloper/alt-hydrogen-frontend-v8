@@ -1,5 +1,15 @@
+import { Menu, Search, User, ShoppingCart } from 'lucide-react';
+
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router';
+//import { Link } from '@shopify/hydrogen';
+
+
+
+
 import {Suspense} from 'react';
 import {Await, NavLink, useAsyncValue} from 'react-router';
+//import {Await, useAsyncValue} from 'react-router';
 import {
   type CartViewPayload,
   useAnalytics,
@@ -17,6 +27,157 @@ interface HeaderProps {
 
 type Viewport = 'desktop' | 'mobile';
 
+
+interface HeaderProps {
+  header: HeaderQuery;
+  cart: Promise<CartApiQueryFragment | null>;
+  isLoggedIn: Promise<boolean>;
+  publicStoreDomain: string;
+}
+
+export function Header({ header, isLoggedIn, cart, publicStoreDomain }: HeaderProps) {
+  const { shop, menu } = header;
+  const [scrolled, setScrolled] = useState(false);
+
+  return (
+    <header
+      className={`fixed top-8 left-0 right-0 z-40 transition-all duration-300 ${
+        scrolled ? 'top-0 glass-strong shadow-xl' : ''
+      }`}
+      style={{
+        background: scrolled
+          ? 'rgba(10, 10, 10, 0.85)'
+          : 'rgba(10, 10, 10, 0.75)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+      }}
+    >  
+
+      <div className="header-container">
+        {/* Left */}
+        <div className="header-left">
+          <button className="icon-button">
+            <Menu className="icon green" strokeWidth={2} />
+          </button>
+          <button className="icon-button">
+            <Search className="icon green" strokeWidth={2} />
+          </button>
+        </div>
+
+        {/* Center */}
+        <Link to='/' className="header-link">
+          <div className="header-center">
+            <img
+              src="/flora_bella_logo.png"
+              alt="Flora Bella Trace Minerals"
+              className={`logo ${scrolled ? 'logo-small' : 'logo-large'}`}
+            />
+          </div>
+        </Link>
+
+        {/* Right */}
+        <div className="header-right">
+          <nav className="header-nav">
+            <Link to="/shop/" className="header-link">
+              Shop
+            </Link>          
+            <Link to="/learn" className="header-link">
+              Learn
+            </Link>          
+            <Link to="/about" className="header-link">
+              About
+            </Link>          
+            <Link to="/community" className="header-link">
+              Community
+            </Link>          
+            <Link to="/contact" className="header-link">
+              Contact
+            </Link>
+            <Link to="/blogs/news" className="header-link">
+              Blogs
+            </Link>            
+          </nav>
+
+          <button className="icon-button">
+            <User className="icon white" strokeWidth={2} />
+          </button>
+
+          <button className="icon-button cart-button">
+            <ShoppingCart className="icon white" strokeWidth={2} />
+            <span className="cart-badge">2</span>
+          </button>
+        </div>
+      </div>
+
+    </header>
+    );
+}
+
+
+
+export function HeaderMenu({
+  menu,
+  primaryDomainUrl,
+  viewport,
+  publicStoreDomain,
+}: {
+  menu: HeaderProps['header']['menu'];
+  primaryDomainUrl: HeaderProps['header']['shop']['primaryDomain']['url'];
+  viewport: Viewport;
+  publicStoreDomain: HeaderProps['publicStoreDomain'];
+}) {
+  const className = `header-menu-${viewport} flex gap-4`;
+  const { close } = useAside();
+
+  return (
+    <nav className={className} role="navigation">
+      {(menu || FALLBACK_HEADER_MENU).items.map((item) => {
+        if (!item.url) return null;
+
+        const url =
+          item.url.includes('myshopify.com') ||
+          item.url.includes(publicStoreDomain) ||
+          item.url.includes(primaryDomainUrl)
+            ? new URL(item.url).pathname
+            : item.url;
+
+        return (
+          <NavLink
+            className="text-white hover:text-green-400 transition-colors font-medium"
+            end
+            key={item.id}
+            onClick={close}
+            to={url}
+          >
+            {item.title}
+          </NavLink>
+        );
+      })}
+    </nav>
+  );
+}
+
+function HeaderCtas({ isLoggedIn, cart }: Pick<HeaderProps, 'isLoggedIn' | 'cart'>) {
+  return (
+    <nav className="flex items-center gap-4">
+      <NavLink prefetch="intent" to="/account">
+        <Suspense fallback="Sign in">
+          <Await resolve={isLoggedIn} errorElement="Sign in">
+            {(isLoggedIn) => (isLoggedIn ? 'Account' : 'Sign in')}
+          </Await>
+        </Suspense>
+      </NavLink>
+      <button onClick={() => console.log('Search open')}>
+        Search
+      </button>
+      <CartToggle cart={cart} />
+    </nav>
+  );
+}
+
+// DxB original code
+/* 
 export function Header({
   header,
   isLoggedIn,
@@ -39,6 +200,7 @@ export function Header({
     </header>
   );
 }
+
 
 export function HeaderMenu({
   menu,
@@ -114,6 +276,7 @@ function HeaderCtas({
     </nav>
   );
 }
+*/
 
 function HeaderMenuMobileToggle() {
   const {open} = useAside();

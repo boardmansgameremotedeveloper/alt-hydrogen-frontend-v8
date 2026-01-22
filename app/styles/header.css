@@ -1,0 +1,172 @@
+/* ===== Header Shell ===== */
+
+.site-header {
+  position: fixed;
+  top: 2rem;
+  left: 0;
+  right: 0;
+  z-index: 40;
+
+  background: rgba(10, 10, 10, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+  transition: all 300ms ease;
+}
+
+.site-header.scrolled {
+  top: 0;
+  background: rgba(10, 10, 10, 0.85);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+}
+
+/* ===== Horizontal Layout ===== */
+
+.header-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1rem 2rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Left / Center / Right */
+
+.header-left,
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+/* ===== Logo ===== */
+
+.logo {
+  cursor: pointer;
+  transition: transform 300ms ease, height 300ms ease;
+}
+
+.logo:hover {
+  transform: scale(1.1);
+}
+
+.logo-large {
+  height: 96px;
+}
+
+.logo-small {
+  height: 64px;
+}
+
+/* ===== Navigation ===== */
+
+.header-nav {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .header-nav {
+    display: flex;
+    gap: 1.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  .header-nav a {
+    color: white;
+    text-decoration: none;
+    transition: transform 200ms ease, color 200ms ease;
+  }
+
+  .header-nav a:hover {
+    color: #7cb342;
+    transform: translateY(-4px) scale(1.1);
+  }
+}
+
+/* ===== Buttons & Icons ===== */
+
+.icon-button {
+  position: relative;
+  padding: 0.5rem;
+  border-radius: 0.75rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+
+  transition: all 300ms ease;
+}
+
+.icon-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.1) rotate(12deg);
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+}
+
+.icon.green {
+  color: #7cb342;
+}
+
+.icon.white {
+  color: white;
+}
+
+/* ===== Cart Badge ===== */
+
+.cart-button {
+  position: relative;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+
+  width: 20px;
+  height: 20px;
+
+  background: #7cb342;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: bold;
+
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: transform 200ms ease;
+}
+
+.cart-button:hover .cart-badge {
+  transform: scale(1.25);
+}
+
+.header-link {
+  color: white;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition:
+    color 0.3s ease,
+    transform 0.3s ease;
+  display: inline-block;
+}
+
+.header-link:hover {
+  color: #7cb342;
+  transform: translateY(-2px) scale(1.1);
+}
