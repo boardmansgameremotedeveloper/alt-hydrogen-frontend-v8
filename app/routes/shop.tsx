@@ -1,5 +1,5 @@
 import type {LoaderFunctionArgs, MetaFunction} from '@shopify/hydrogen';
-import {json, Image, Money} from '@shopify/hydrogen';
+import { Image, Money} from '@shopify/hydrogen';
 import {useLoaderData, Link} from 'react-router';
 //import { useLoaderData } from 'react-router';
 //import { Link } from '@shopify/hydrogen';
