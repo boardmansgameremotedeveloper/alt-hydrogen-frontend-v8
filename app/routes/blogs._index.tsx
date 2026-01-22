@@ -1,9 +1,11 @@
+import {useState} from 'react';
+
 import {
   Link,
   useLoaderData,
 } from 'react-router';
 import type {Route} from './+types/blogs._index';
-import {getPaginationVariables} from '@shopify/hydrogen';
+import { Image, getPaginationVariables} from '@shopify/hydrogen';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
 import type {BlogsQuery} from 'storefrontapi.generated';
 
@@ -12,6 +14,12 @@ type BlogNode = BlogsQuery['blogs']['nodes'][0];
 export const meta: Route.MetaFunction = () => {
   return [{title: `Hydrogen | Blogs`}];
 };
+
+// DxB - Import CSS
+import blogStyles from '~/styles/pages/blogs.css?url';
+export function links() {
+  return [{rel: 'stylesheet', href: blogStyles}];
+}
 
 export async function loader(args: Route.LoaderArgs) {
   // Start fetching non-critical data without blocking time to first byte
@@ -41,7 +49,56 @@ async function loadCriticalData({context, request}: Route.LoaderArgs) {
     // Add other queries here, so that they are loaded in parallel
   ]);
 
-  return {blogs};
+
+  // Fetch all blog articles for tag extraction
+  const ARTICLES_QUERY = `
+    query Articles($blogHandle: String!, $first: Int = 20) {
+      blog(handle: $blogHandle) {
+        articles(first: $first) {
+          nodes {
+            id
+            title
+            handle
+            tags
+            authorV2 {
+              name
+            }
+            contentHtml
+            image {
+              url
+              altText
+              width
+              height
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  // For simplicity, just grab the first blog
+  const blogHandle = blogs.nodes[0]?.handle;
+  let articles: any[] = [];
+  let tags: string[] = [];
+  if (blogHandle) {
+    const res = await context.storefront.query(ARTICLES_QUERY, {variables: {blogHandle}});
+    articles = res.blog?.articles?.nodes || [];
+    tags = Array.from(new Set(articles.flatMap((a: any) => a.tags || [])));
+  }
+
+  console.log("---- Blogs QUERY ---");
+  console.log(JSON.stringify(blogs, null, 2));
+
+  console.log("---- Articles QUERY ---");
+  console.log(JSON.stringify(articles, null, 2));
+
+  console.log("---- Tags QUERY ---");
+  console.log(JSON.stringify(tags, null, 2));
+
+
+  return {blogs, articles, tags};
+
+  //return {blogs};
 }
 
 /**
@@ -53,8 +110,13 @@ function loadDeferredData({context}: Route.LoaderArgs) {
   return {};
 }
 
+
 export default function Blogs() {
   const {blogs} = useLoaderData<typeof loader>();
+  //const {blogs, articles, tags} = useLoaderData<typeof loader>();  
+
+  console.log("---- Here blogs._index.tsx ----");
+  console.log(JSON.stringify(blogs, null, 2));
 
   return (
     <div className="blogs">

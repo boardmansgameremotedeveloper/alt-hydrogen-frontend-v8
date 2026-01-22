@@ -1,0 +1,12 @@
+.hello-page {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hello-page h1 {
+  font-size: 3rem;
+  font-weight: 600;
+  color: #7cb342;
+}

@@ -12,6 +12,9 @@ import type {
 } from 'storefrontapi.generated';
 import {ProductItem} from '~/components/ProductItem';
 
+// dxb - no
+//import '../styles/tailwind.css?url';
+
 export const meta: Route.MetaFunction = () => {
   return [{title: 'Hydrogen | Home'}];
 };
@@ -63,9 +66,14 @@ function loadDeferredData({context}: Route.LoaderArgs) {
 export default function Homepage() {
   const data = useLoaderData<typeof loader>();
   return (
-    <div className="home">
-      <FeaturedCollection collection={data.featuredCollection} />
-      <RecommendedProducts products={data.recommendedProducts} />
+    <div className="home flex flex-col space-y-16">
+      <section className="max-w-7xl mx-auto px-6">
+        <FeaturedCollection collection={data.featuredCollection} />
+      </section>
+
+      <section className="max-w-7xl mx-auto px-6">
+        <RecommendedProducts products={data.recommendedProducts} />
+      </section>
     </div>
   );
 }
@@ -99,11 +107,11 @@ function RecommendedProducts({
 }) {
   return (
     <div className="recommended-products">
-      <h2>Recommended Products</h2>
+      <h2 className="text-green-600 bg-red-500 text-4xl">Recommended Products</h2>
       <Suspense fallback={<div>Loading...</div>}>
         <Await resolve={products}>
           {(response) => (
-            <div className="recommended-products-grid">
+            <div className="recommended-products-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {response
                 ? response.products.nodes.map((product) => (
                     <ProductItem key={product.id} product={product} />

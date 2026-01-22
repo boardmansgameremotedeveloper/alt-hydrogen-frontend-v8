@@ -15,7 +15,31 @@ import favicon from '~/assets/favicon.svg';
 import {FOOTER_QUERY, HEADER_QUERY} from '~/lib/fragments';
 import resetStyles from '~/styles/reset.css?url';
 import appStyles from '~/styles/app.css?url';
+import customStyles from '~/styles/custom.css?url';
 import {PageLayout} from './components/PageLayout';
+
+import headerStyles from '~/styles/header.css?url';
+
+//import './styles/tailwind.css?url';
+//import tailwindStyles from '~/styles/tailwind.css?url';
+
+
+/*
+import type {LinksFunction, MetaFunction} from 'react-router';
+import tailwindstyles from "./styles/tailwind.css";
+export const links: LinksFunction = () => [
+  { rel: 'preconnect', href: 'https://cdn.shopify.com' },
+  { rel: 'preconnect', href: 'https://shop.app' },
+  { rel: 'icon', type: 'image/svg+xml', href: favicon },
+
+  { rel: 'stylesheet', href: resetStyles },
+  { rel: 'stylesheet', href: appStyles },
+  { rel: 'stylesheet', href: customStyles },
+  { rel: "stylesheet", href: tailwindstyles },
+];
+
+*/
+
 
 export type RootLoader = typeof loader;
 
@@ -50,7 +74,8 @@ export const shouldRevalidate: ShouldRevalidateFunction = ({
  *
  * It's a temporary fix until the issue is resolved.
  * https://github.com/remix-run/remix/issues/9242
- */
+*/
+
 export function links() {
   return [
     {
@@ -62,8 +87,13 @@ export function links() {
       href: 'https://shop.app',
     },
     {rel: 'icon', type: 'image/svg+xml', href: favicon},
+    //{ rel: "stylesheet", href: tailwindStyles },
   ];
 }
+
+
+ 
+
 
 export async function loader(args: Route.LoaderArgs) {
   // Start fetching non-critical data without blocking time to first byte
@@ -104,7 +134,8 @@ async function loadCriticalData({context}: Route.LoaderArgs) {
     storefront.query(HEADER_QUERY, {
       cache: storefront.CacheLong(),
       variables: {
-        headerMenuHandle: 'main-menu', // Adjust to your header menu handle
+        //headerMenuHandle: 'main-menu', // Adjust to your header menu handle
+        headerMenuHandle: 'dev-header-menu', // DxB
       },
     }),
     // Add other queries here, so that they are loaded in parallel
@@ -151,6 +182,8 @@ export function Layout({children}: {children?: React.ReactNode}) {
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <link rel="stylesheet" href={resetStyles}></link>
         <link rel="stylesheet" href={appStyles}></link>
+        <link rel="stylesheet" href={customStyles}></link>
+        <link rel="stylesheet" href={headerStyles}></link>
         <Meta />
         <Links />
       </head>
