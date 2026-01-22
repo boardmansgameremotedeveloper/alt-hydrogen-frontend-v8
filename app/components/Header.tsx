@@ -88,9 +88,6 @@ export function Header({ header, isLoggedIn, cart, publicStoreDomain }: HeaderPr
             <Link to="/about" className="header-link">
               About
             </Link>          
-            <Link to="/about" className="header-link">
-              DxB
-            </Link>          
             <Link to="/community" className="header-link">
               Community
             </Link>          
