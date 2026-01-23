@@ -94,7 +94,7 @@ export function Header({ header, isLoggedIn, cart, publicStoreDomain }: HeaderPr
             <Link to="/contact" className="header-link">
               Contact
             </Link>
-            <Link to="/blogs/news" className="header-link">
+            <Link to="/blogs/" className="header-link">
               Blogs
             </Link>            
           </nav>
